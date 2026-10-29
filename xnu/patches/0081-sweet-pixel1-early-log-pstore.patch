@@ -259,8 +259,8 @@ index 9eea047..5d2856f 100644
 + * Early boot log (osfmk/arm64/sweet_early.c): the Pixel 1 ramoops console
 + * zone and the 32MB block start.s / arm_vm_init map around it.
 + */
-+#define SWEET_EARLY_LOG_BLOCK     0x82000000
-+#define SWEET_EARLY_LOG_PRZ       0x83540000
++#define SWEET_EARLY_LOG_BLOCK     0x92000000
++#define SWEET_EARLY_LOG_PRZ       0x92908000
 +
  #define HAS_GIC_V3                1
  

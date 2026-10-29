@@ -7,7 +7,7 @@
  */
 #include "pstore.h"
 
-#define PRZ_BASE	0x83540000UL
+#define PRZ_BASE	0x92908000UL	/* Mi 5 ramoops: 1M at 0x92900000, record 0x8000 */
 #define PRZ_DATA_MAX	(0x80000UL - 12)
 #define PRZ_SIG		0x43474244U	/* "DBGC" */
 

@@ -8,16 +8,17 @@ set -euo pipefail
 stock=$(realpath "$1")
 out=$(realpath -m "$2")
 payload=${3:-}
+MAIN=${MAIN:-gemini.c}
 cd "$(dirname "$0")"
 X=aarch64-linux-gnu-
 CFLAGS="-O2 -ffreestanding -nostdlib -fno-pic -mgeneral-regs-only -mstrict-align -fno-stack-protector -Wall -Wextra -DGEMINI"
 mkdir -p out/gemini
 
-for f in start.S gemini.c console.c loader.c fdt.c; do
+for f in start.S $MAIN console.c loader.c fdt.c; do
 	${X}gcc $CFLAGS -c $f -o out/gemini/${f%.*}.o
 done
 ${X}gcc $CFLAGS -static -T shim.ld -Wl,--build-id=none -Wl,--no-warn-rwx-segments -Wl,-N \
-	out/gemini/start.o out/gemini/gemini.o out/gemini/console.o \
+	out/gemini/start.o out/gemini/${MAIN%.c}.o out/gemini/console.o \
 	out/gemini/loader.o out/gemini/fdt.o -o out/gemini/shim.elf
 ${X}objcopy -O binary out/gemini/shim.elf out/gemini/Image
 size=$(${X}nm out/gemini/shim.elf | awk '$3=="_end"{print $1}')
