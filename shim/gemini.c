@@ -87,7 +87,15 @@ void shim_main(uint64_t dtb)
 	con_flush();
 
 	/* A hang from here on must not need a power-button press. */
+	plog_init();
+	plog_str("A: shim entered\
+");
+	__sync_synchronize();
+
 	wdt_arm(WDT_SECS);
+	plog_str("B: watchdog armed\
+");
+	__sync_synchronize();
 
 	/* Marker in the pstore ring the kernel also uses (0x83540000): after a
 	 * reset we can tell "kernel never wrote" from "RAM was cleared". */
@@ -98,11 +106,17 @@ void shim_main(uint64_t dtb)
 
 	/* Payload in the ramdisk slot (lk2nd/ABL fill linux,initrd-start/end). */
 	const char *why = loader_boot(dtb);
+	plog_str("C: ramdisk loader returned\
+");
+	__sync_synchronize();
 	con_str("LOADER", why);
 	con_flush();
 
 	/* Fallback: a SWEETXNU blob appended at _end (the Pixel layout). */
 	why = loader_boot_rd((uintptr_t)_end, TAGS_ADDR);
+	plog_str("D: appended loader returned\
+");
+	__sync_synchronize();
 	con_str("LOADER2", why);
 	con_flush();
 	delay_ms(30000);
