@@ -97,12 +97,6 @@ void shim_main(uint64_t dtb)
 ");
 	__sync_synchronize();
 
-	/* Marker in the pstore ring the kernel also uses (0x83540000): after a
-	 * reset we can tell "kernel never wrote" from "RAM was cleared". */
-	plog_init();
-	plog_str("GEMINI: about to jump to payload\n");
-	plog_hex("  entry", (uint64_t)0);
-	plog_str("  (marker from shim)\n");
 
 	/* Payload in the ramdisk slot (lk2nd/ABL fill linux,initrd-start/end). */
 	const char *why = loader_boot(dtb);
